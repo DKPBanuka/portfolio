@@ -1,0 +1,538 @@
+/* Custom colored scrollbar */
+::-webkit-scrollbar {
+  height: 8px;
+  width: 8px;
+  background: #ffe4ef;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #edb1c3 0%, #ff0051 100%);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fff0f6;
+  border-radius: 8px;
+}
+/* For Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #ff0051 #ffe4ef;
+}
+body {
+  overflow-x: hidden;
+}
+/* Tailwind v4 - include preflight + utilities in one import */
+@import "tailwindcss";
+
+/* Global font: Barlow Semi Condensed (loaded in index.html) */
+:root, html, body, #root {
+	font-family: 'Barlow Semi Condensed', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+/* Theme variables for badges / icons / dotted ring */
+:root {
+	--badge-start: #ffffff; /* gradient start */
+	--badge-end:   #edb1c3; /* gradient end */
+	--badge-icon:  #ff0051; /* icon color inside badge */
+	--dotted-color: #ffffff; /* dotted ring color */
+	--dotted-dash: 5 20; /* dot length and gap */
+	--dotted-stroke: 2; /* dot thickness */
+	--dotted-anim-duration: 100s; /* dashoffset animation speed */
+}
+
+/* utility class for components that used inline style previously */
+.font-barlow { font-family: 'Barlow Semi Condensed', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; }
+
+/* Custom component styles */
+/* Flip card styles used in Services.jsx */
+.flip-card {
+	perspective: 1000px;
+}
+
+.flip-card-inner {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	transform-style: preserve-3d;
+	transition: transform 0.6s;
+}
+
+.flip-card:hover .flip-card-inner {
+	transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.5rem; /* rounded-lg */
+	padding: 1.5rem;       /* p-6 */
+}
+
+.flip-card-back {
+	transform: rotateY(180deg);
+}
+
+/* Slow spin animation for the hero ring */
+@keyframes spin-slow {
+	to { transform: rotate(360deg); }
+}
+.animate-spin-slow {
+	animation: spin-slow 14s linear infinite;
+}
+
+/* Floating circular badges used around the profile image */
+.badge-float {
+	position: absolute;
+	display: grid;
+	place-items: center;
+	width: 3rem;
+	height: 3rem;
+	border-radius: 9999px;
+	background: white;
+	color: #e11d48; /* rose-600 */
+	box-shadow: 0 10px 30px -12px rgba(0,0,0,.35);
+	border: 2px solid rgba(225, 29, 72, .15);
+}
+
+/* Glow pulse for main frame */
+@keyframes glow {
+	0%, 100% { box-shadow: 0 0 0 0 rgba(225,29,72,.25); }
+	50% { box-shadow: 0 0 40px 0 rgba(225,29,72,.35); }
+}
+.animate-glow { animation: glow 4s ease-in-out infinite; }
+
+/* Fade-in entrance animation for hero elements */
+@keyframes fade-in-up {
+	from { opacity: 0; transform: translateY(12px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+	opacity: 0;
+	animation: fade-in-up 700ms cubic-bezier(.2,.9,.3,1) forwards;
+}
+
+/* Rotations */
+@keyframes rotate {
+	to { transform: rotate(360deg); }
+}
+.animate-rotate { animation: rotate 16s linear infinite; }
+.animate-rotate-rev { animation: rotate 18s linear infinite reverse; }
+
+/* Orbital containers use transform-origin center to rotate children */
+.orbit {
+	position: absolute;
+	inset: -1.5rem;
+	transform-origin: 50% 50%;
+}
+.orbit .badge-float { top: 50%; left: -1.5rem; transform: translateY(-50%); }
+.orbit-pos { position: absolute; inset: 0; transform-origin: 50% 50%; }
+.orbit-pos .badge-float { top: 50%; left: -1.5rem; transform: translateY(-50%); }
+.orbit-medium { inset: -2.5rem; animation: rotate 22s linear infinite; }
+.orbit-slow { inset: -3.5rem; animation: rotate 28s linear infinite; }
+.orbit-fast { inset: -0.5rem; animation: rotate 14s linear infinite; }
+.orbit.rev { animation-direction: reverse; }
+
+/* Orbit that matches the dotted ring size */
+.orbit-main { inset: -1rem; animation: rotate 16s linear infinite reverse; }
+/* Static orbit matching ring size (no rotation) */
+.orbit-main-static { inset: -1rem; }
+
+/* Bobbing animation for individual icons */
+@keyframes float-y {
+	0%, 100% { transform: translateY(-50%); }
+	50% { transform: translateY(calc(-50% - 6px)); }
+}
+.badge-float-wrap {
+	position: absolute;
+	top: 50%;
+	left: -1.5rem;
+	transform: translateY(-50%);
+	animation: float-y 3.6s ease-in-out infinite;
+	animation-delay: var(--delay, 0s);
+}
+@keyframes scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+.animate-scroll {
+  animation: scroll 40s linear infinite;
+}
+
+/* Navbar mouse-follow orb */
+.mouse-orb {
+	position: absolute;
+	width: 220px;
+	height: 220px;
+	border-radius: 9999px;
+	pointer-events: none;
+	mix-blend-mode: screen;
+	background: radial-gradient(circle at 30% 30%, rgba(255,120,150,0.18) 0%, rgba(255,80,120,0.12) 25%, rgba(255,60,100,0.06) 50%, transparent 60%);
+	transform: translate3d(-50%, -50%, 0) scale(0.7);
+	transition: opacity 300ms ease, transform 300ms ease;
+	opacity: 0;
+	z-index: 10;
+}
+
+.relative[data-hover="1"] .mouse-orb {
+	opacity: 1;
+	transform: translate3d(-50%, -50%, 0) scale(1);
+}
+
+/* Nav link hover/active fancier effect */
+.nav-link {
+	--link-bg: transparent;
+	--link-color: #111827; /* gray-900 */
+}
+.nav-link:hover {
+	background: linear-gradient(90deg, rgba(255,59,99,1), rgba(255,29,85,1));
+	color: white !important;
+	transform: translateY(-3px) scale(1.02);
+	box-shadow: 0 8px 22px -12px rgba(0,0,0,0.35);
+}
+.logo-badge { background: linear-gradient(90deg, rgba(255,249,249,0.6), rgba(255,247,246,0.6)); }
+
+/* subtle focus ring for accessibility */
+.nav-link:focus { outline: 3px solid rgba(255,59,99,0.18); outline-offset: 4px; }
+
+/* Profile rounded-square badges */
+.profile-badge {
+	position: absolute;
+	width: 3.1rem;
+	height: 3.1rem;
+	border-radius: 0.75rem;
+	background: linear-gradient(180deg, rgba(255,64,110,1), rgba(255,36,83,1));
+	display: grid;
+	place-items: center;
+	color: white;
+	box-shadow: 0 18px 40px -20px rgba(0,0,0,0.5);
+	transform: translate3d(0,0,0);
+	transition: transform 400ms cubic-bezier(.2,.9,.3,1), box-shadow 300ms ease;
+	z-index: 30;
+}
+.profile-badge svg { width: 18px; height: 18px; }
+
+/* gentle nudge animation: moves badges subtly in 4 directions */
+@keyframes nudge-xy {
+	0% { transform: translate3d(0, 0, 0); }
+	25% { transform: translate3d(6px, -6px, 0); }
+	50% { transform: translate3d(0, -10px, 0); }
+	75% { transform: translate3d(-6px, 6px, 0); }
+	100% { transform: translate3d(0, 0, 0); }
+}
+.profile-badge { animation: nudge-xy 6.5s ease-in-out infinite; }
+
+/* subtler stagger for each badge (can rely on inline style order for variety) */
+.profile-badge:nth-child(2) { animation-delay: 0.15s; }
+.profile-badge:nth-child(3) { animation-delay: 0.3s; }
+.profile-badge:nth-child(4) { animation-delay: 0.45s; }
+.profile-badge:nth-child(5) { animation-delay: 0.6s; }
+.profile-badge:nth-child(6) { animation-delay: 0.75s; }
+.profile-badge:nth-child(7) { animation-delay: 0.9s; }
+.profile-badge:nth-child(8) { animation-delay: 1.05s; }
+
+/* moving glow / light that drifts around */
+.badge-glow {
+	position: absolute;
+	width: 260px;
+	height: 260px;
+	border-radius: 9999px;
+	background: radial-gradient(circle at 35% 35%, rgba(255,120,150,0.14), rgba(255,60,100,0.06) 30%, transparent 60%);
+	filter: blur(18px);
+	z-index: 20;
+	animation: drift 8s ease-in-out infinite;
+	pointer-events: none;
+}
+
+/* dotted-ring SVG styling */
+.dotted-ring { width: 420px; height: 420px; transform: rotate(0deg); animation: ring-rotate 18s linear infinite; }
+.dotted-ring circle { stroke: var(--dotted-color); stroke-width: var(--dotted-stroke); stroke-dasharray: var(--dotted-dash); stroke-linecap: round; }
+/* animate the stroke dash offset so dots appear to move smoothly along the ring */
+.dotted-ring circle { animation: dash-offset var(--dotted-anim-duration) linear infinite; }
+@keyframes dash-offset { to { stroke-dashoffset: -1000; } }
+
+@keyframes drift {
+	0% { transform: translate3d(-8px, -6px, 0) scale(0.98); }
+	25% { transform: translate3d(12px, -10px, 0) scale(1.02); }
+	50% { transform: translate3d(10px, 14px, 0) scale(1); }
+	75% { transform: translate3d(-14px, 10px, 0) scale(1.03); }
+	100% { transform: translate3d(-8px, -6px, 0) scale(0.98); }
+}
+
+/* Orbit wrapper: rotate the whole set so badges move along dotted ring */
+.orbit {
+  position: absolute;
+  inset: 0;
+  display: block;
+  transform-origin: center center;
+	animation: orbit-rotate 22s linear infinite;
+	z-index: 60; /* ensure orbit sits above decorative ring */
+}
+
+/* Orbit-item positions its child using rotate + translateX */
+.orbit-item { position: absolute; left: 50%; top: 50%; width:0; height:0; transform-origin: 0 0; }
+
+/* profile-badge remains the visual badge; position it so its center sits at the orbit point */
+.orbit-item .profile-badge { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); width: 3.8rem; height: 3.8rem; border-radius: 0.8rem; display:grid; place-items:center; background: linear-gradient(180deg, var(--badge-start), var(--badge-end)); box-shadow: 0 26px 48px -18px rgba(0,0,0,0.45); border:3px solid rgba(255,255,255,0.95); z-index:80; }
+.orbit-item .profile-badge .badge-inner { width:100%; height:100%; display:grid; place-items:center; /* no translate here, center via parent */ }
+
+/* counter-rotate badges so the square stays upright while orbit rotates */
+.orbit-item { --orbit-rotation: 0deg; }
+.orbit-item { animation: none; }
+.orbit { animation: orbit-rotate 22s linear infinite; }
+.orbit-item { will-change: transform; }
+.orbit { will-change: transform; }
+.orbit-item .profile-badge { animation: badge-counter 22s linear infinite reverse; }
+@keyframes badge-counter { to { transform: translate(-50%, -50%) rotate(-360deg); } }
+
+/* bobbing float on the inner wrapper */
+@keyframes floatY { 0%{ transform: translateY(0);} 50%{ transform: translateY(-8px);} 100%{ transform: translateY(0);} }
+.profile-badge .badge-inner { animation: floatY 4s ease-in-out infinite; }
+
+/* keep icons upright by counter-rotating (reverse the parent orbit rotation) */
+.profile-badge .icon { display:grid; place-items:center; color: var(--badge-icon); }
+
+/* Hover: scale badge and pause bobbing */
+.profile-badge:hover .badge-inner { animation-play-state: paused; transform: scale(1.12); }
+.profile-badge:hover { box-shadow: 0 30px 60px rgba(0,0,0,0.25); }
+
+/* Profile blob decorative style */
+.profile-blob { filter: drop-shadow(0 18px 40px rgba(0,0,0,0.28)); transition: transform 420ms cubic-bezier(.2,.9,.3,1); }
+.profile-blob:hover { transform: translateY(-6px) scale(1.02); }
+
+/* Multi-blob animations */
+.blob-float-1 { animation: blob-float 12s ease-in-out infinite; }
+.blob-drift-1 { animation: blob-drift 10s ease-in-out infinite; }
+.profile-container { animation: profile-gentle-float 8s ease-in-out infinite; }
+
+@keyframes blob-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-15px) rotate(1deg); }
+  50% { transform: translateY(-8px) rotate(-0.5deg); }
+  75% { transform: translateY(-20px) rotate(0.8deg); }
+}
+
+@keyframes blob-drift {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(8px, -12px) rotate(2deg); }
+  50% { transform: translate(-5px, -8px) rotate(-1deg); }
+  75% { transform: translate(12px, -15px) rotate(1.5deg); }
+}
+
+@keyframes profile-gentle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+/* Glass effect for profile container */
+.profile-container {
+  background: rgba(255, 255, 255, 0.1);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 
+    0 25px 45px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.profile-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.3) 0%, 
+    rgba(255, 255, 255, 0.1) 50%, 
+    transparent 50%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+/* DevOps icons floating around profile */
+.devops-icon {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.icon-float-1 {
+  animation: icon-random-1 18s infinite ease-in-out;
+}
+
+.icon-float-2 {
+  animation: icon-random-2 22s infinite ease-in-out;
+}
+
+.icon-float-3 {
+  animation: icon-random-3 16s infinite ease-in-out;
+}
+
+.icon-float-4 {
+  animation: icon-random-4 20s infinite ease-in-out;
+}
+
+.icon-float-5 {
+  animation: icon-random-5 24s infinite ease-in-out;
+}
+
+.icon-float-6 {
+  animation: icon-random-6 19s infinite ease-in-out;
+}
+
+.icon-float-7 {
+  animation: icon-random-7 21s infinite ease-in-out;
+}
+
+.icon-float-8 {
+  animation: icon-random-8 17s infinite ease-in-out;
+}
+
+.devops-icon:hover {
+  transform: scale(1.2) translateY(-4px);
+}
+
+.devops-icon svg {
+  color: #ff0055;
+  filter: drop-shadow(0 4px 8px rgba(255, 0, 85, 0.3));
+  transition: all 0.3s ease;
+}
+
+.devops-icon:hover svg {
+  color: #e6004c;
+  filter: drop-shadow(0 6px 12px rgba(230, 0, 76, 0.5));
+}
+
+.icon-tooltip {
+  position: absolute;
+  top: 4rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #ff0055;
+  font-size: 0.75rem;
+  font-weight: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.devops-icon:hover .icon-tooltip {
+  opacity: 1;
+  color: #e6004c;
+  transform: translateX(-50%) translateY(-4px);
+}
+
+/* Random floating patterns for each icon */
+.icon-float-1 { animation: icon-random-1 7s ease-in-out infinite; animation-delay: 0s; }
+.icon-float-2 { animation: icon-random-2 8s ease-in-out infinite; animation-delay: 1s; }
+.icon-float-3 { animation: icon-random-3 6s ease-in-out infinite; animation-delay: 2s; }
+.icon-float-4 { animation: icon-random-4 9s ease-in-out infinite; animation-delay: 1.5s; }
+.icon-float-5 { animation: icon-random-5 7.5s ease-in-out infinite; animation-delay: 2.5s; }
+.icon-float-6 { animation: icon-random-6 8.5s ease-in-out infinite; animation-delay: 0.5s; }
+.icon-float-7 { animation: icon-random-7 6.5s ease-in-out infinite; animation-delay: 3s; }
+.icon-float-8 { animation: icon-random-8 7.8s ease-in-out infinite; animation-delay: 1.8s; }
+
+@keyframes icon-float-vertical {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes icon-float-horizontal {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  50% { transform: translateX(10px) rotate(-1deg); }
+}
+
+@keyframes icon-float-diagonal {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(8px, -12px) rotate(1.5deg); }
+}
+
+@keyframes icon-float-circular {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(5px, -8px) rotate(1deg); }
+  50% { transform: translate(0, -12px) rotate(0deg); }
+  75% { transform: translate(-5px, -8px) rotate(-1deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+/* Full hero section movement animations for each icon */
+@keyframes icon-random-1 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-150px, -80px) rotate(15deg); }
+  40% { transform: translate(200px, -120px) rotate(-10deg); }
+  60% { transform: translate(-100px, 100px) rotate(20deg); }
+  80% { transform: translate(180px, 60px) rotate(-15deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes icon-random-2 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(160px, -100px) rotate(-18deg); }
+  50% { transform: translate(-120px, -60px) rotate(12deg); }
+  75% { transform: translate(80px, 120px) rotate(-25deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes icon-random-3 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  15% { transform: translate(-180px, 80px) rotate(22deg); }
+  35% { transform: translate(140px, -140px) rotate(-8deg); }
+  65% { transform: translate(-60px, 90px) rotate(16deg); }
+  85% { transform: translate(220px, -50px) rotate(-12deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes icon-random-4 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  30% { transform: translate(120px, 110px) rotate(-20deg); }
+  60% { transform: translate(-200px, -90px) rotate(18deg); }
+  90% { transform: translate(90px, -80px) rotate(-14deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes icon-random-5 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-140px, -120px) rotate(25deg); }
+  45% { transform: translate(190px, 70px) rotate(-16deg); }
+  70% { transform: translate(-80px, 130px) rotate(11deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes icon-random-6 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  25% { transform: translate(170px, -70px) rotate(-22deg); }
+  50% { transform: translate(-110px, 100px) rotate(19deg); }
+  75% { transform: translate(130px, -110px) rotate(-13deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes icon-random-7 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  35% { transform: translate(-160px, 90px) rotate(17deg); }
+  70% { transform: translate(210px, -100px) rotate(-21deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@keyframes icon-random-8 {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  28% { transform: translate(100px, -130px) rotate(-19deg); }
+  56% { transform: translate(-190px, 60px) rotate(23deg); }
+  84% { transform: translate(150px, 80px) rotate(-17deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+@media (prefers-reduced-motion: reduce) { 
+  .orbit, .profile-badge .badge-inner, .profile-badge .icon,
+  .blob-float-1, .blob-drift-1, .profile-container, .devops-icon { animation: none !important; } 
+}
