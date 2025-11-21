@@ -12,11 +12,27 @@
   background: #fff0f6;
   border-radius: 8px;
 }
+
+/* Dark mode scrollbar */
+.dark ::-webkit-scrollbar {
+  background: #1f2937;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: linear-gradient(90deg, #db2777 0%, #ec4899 100%);
+}
+.dark ::-webkit-scrollbar-track {
+  background: #111827;
+}
+
 /* For Firefox */
 * {
   scrollbar-width: thin;
   scrollbar-color: #ff0051 #ffe4ef;
 }
+.dark * {
+  scrollbar-color: #ec4899 #1f2937;
+}
+
 body {
   overflow-x: hidden;
 }
@@ -197,7 +213,11 @@ body {
 	transform: translateY(-3px) scale(1.02);
 	box-shadow: 0 8px 22px -12px rgba(0,0,0,0.35);
 }
+.dark .nav-link:hover {
+	background: linear-gradient(90deg, rgba(219,39,119,1), rgba(236,72,153,1));
+}
 .logo-badge { background: linear-gradient(90deg, rgba(255,249,249,0.6), rgba(255,247,246,0.6)); }
+.dark .logo-badge { background: linear-gradient(90deg, rgba(31,41,55,0.6), rgba(55,65,81,0.6)); }
 
 /* subtle focus ring for accessibility */
 .nav-link:focus { outline: 3px solid rgba(255,59,99,0.18); outline-offset: 4px; }

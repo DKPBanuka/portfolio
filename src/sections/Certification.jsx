@@ -138,7 +138,7 @@ const Certification = () => {
   };
 
   return (
-    <section id="certification" className="py-20 px-4 bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen">
+    <section id="certification" className="py-20 px-4 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-4 tracking-tight animate-fade-in">Certifications & Badges</h2>
         <p className="text-center text-gray-500 mb-8 animate-fade-in">My professional achievements, awards, and badges</p>

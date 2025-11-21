@@ -9,15 +9,15 @@ import profileImage from '../assets/profile-image.png';
 const Hero = () => {
   return (
   // Main container for the hero section — fill viewport and center content
-  <section id="home" className="min-h-screen flex items-center px-4 pt-12 md:pt-2 relative z-0">
+  <section id="home" className="min-h-screen flex items-center px-4 pt-12 md:pt-2 relative z-0 dark:bg-gray-900 transition-colors duration-300">
       {/* Grid layout for responsiveness */}
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
         
         {/* Left side: Text content */}
   <div className="text-center lg:text-left animate-fade-in" style={{ animationDelay: '150ms' }}>
 
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-zinc-900 mb-3">
-            Hi, I'm <span className="text-zinc-900">Pasindu Banuka</span>
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-zinc-900 dark:text-white mb-3">
+            Hi, I'm <span className="text-zinc-900 dark:text-white">Pasindu Banuka</span>
           </h1>
           
 
@@ -36,7 +36,7 @@ const Hero = () => {
             repeat={Infinity}
           />
 
-          <p className="text-zinc-600 text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0">
+          <p className="text-zinc-600 dark:text-gray-300 text-lg md:text-xl mb-8 max-w-2xl mx-auto lg:mx-0">
             Passionate about creating innovative digital solutions that bridge technology and creativity. Specialized in full‑stack development and DevOps.
           </p>
 

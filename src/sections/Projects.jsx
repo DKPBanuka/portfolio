@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { projects } from '../data/projects';
 import project1Image from '../assets/projects/devops.webp';
-import project2Image from '../assets/projects/portfolio.png';
+import project2Image from '../assets/projects/Portfolio.png';
 
 const imageMap = {
   'devops.webp': project1Image,
@@ -93,10 +93,10 @@ const Projects = () => {
   const [zoomProject, setZoomProject] = useState(null);
 
   return (
-    <section id="projects" className="py-20 px-4 bg-white">
+    <section id="projects" className="py-20 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         {/* Section Title */}
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Featured Projects</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-2">Featured Projects</h2>
         <p className="text-center text-gray-500 mb-8">Here are some of my recent works</p>
 
         {/* Filter Bar - only horizontal scroll on mobile */}
