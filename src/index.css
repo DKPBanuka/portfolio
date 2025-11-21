@@ -191,6 +191,9 @@ body {
 	--link-bg: transparent;
 	--link-color: #111827; /* gray-900 */
 }
+.dark .nav-link {
+	--link-color: #f3f4f6; /* gray-100 */
+}
 .nav-link:hover {
 	background: linear-gradient(90deg, rgba(255,59,99,1), rgba(255,29,85,1));
 	color: white !important;

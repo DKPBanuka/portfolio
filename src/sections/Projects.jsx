@@ -3,7 +3,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { projects } from '../data/projects';
 import project1Image from '../assets/projects/devops.webp';
-import project2Image from '../assets/projects/portfolio.png';
+import project2Image from '../assets/projects/Portfolio.png';
 
 const imageMap = {
   'devops.webp': project1Image,

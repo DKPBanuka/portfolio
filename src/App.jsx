@@ -14,7 +14,7 @@ import Contact from './sections/Contact';
 
 function App() {
   return (
-    <div>
+    <div className="dark:bg-gray-950 min-h-screen transition-colors duration-300">
       <Navbar />
       <main>
         <Hero />
