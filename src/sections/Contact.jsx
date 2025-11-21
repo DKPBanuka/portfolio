@@ -79,8 +79,8 @@ const Contact = () => {
     <section id="contact" className="py-20 px-4 bg-white dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-10">
-          <h2 className="text-4xl font-extrabold text-gray-800">Let's Work <span className="text-pink-600">Together</span></h2>
-          <p className="text-gray-500 mt-2">Have a project in mind? Let's discuss how I can help bring your ideas to life</p>
+          <h2 className="text-4xl font-extrabold text-gray-800 dark:text-white">Let's Work <span className="text-pink-600 dark:text-pink-400">Together</span></h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">Have a project in mind? Let's discuss how I can help bring your ideas to life</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">

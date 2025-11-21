@@ -97,7 +97,7 @@ const Projects = () => {
       <div className="max-w-6xl mx-auto">
         {/* Section Title */}
         <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-2">Featured Projects</h2>
-        <p className="text-center text-gray-500 mb-8">Here are some of my recent works</p>
+        <p className="text-center text-gray-500 dark:text-gray-400 mb-8">Here are some of my recent works</p>
 
         {/* Filter Bar - only horizontal scroll on mobile */}
         <div className="mb-8 overflow-x-auto overflow-y-hidden scrollbar-hide">
