@@ -4,8 +4,18 @@ import React, { useState } from 'react';
 import awsFoundationImg from '../assets/certification/Aws foundation.png';
 import dockerBadgeImg from '../assets/certification/Docker-Level1.png';
 import gitBadgeImg from '../assets/certification/Git-Level1.png';
+import linuxBadgeImg from '../assets/certification/Linux-Level1.png';
 
 const certificationsData = [
+  {
+    image: linuxBadgeImg,
+    title: 'Linux Level 1',
+    org: 'KodeKloud',
+    issueDate: '2025-10-16',
+    credential: 'https://engineer.kodekloud.com/certificate-verification/b1d01f1c-7efb-4a33-9968-c00db064c1b8',
+    description: 'Essential knowledge of Linux command line, file system navigation, and basic shell scripting.',
+    category: 'System Administration',
+  },
   {
     image: awsFoundationImg,
     title: 'AWS Certified Cloud Practitioner',
@@ -33,7 +43,8 @@ const certificationsData = [
     description: 'Essential knowledge of Git repositories, branching, merging, commit history, and remote repository management.',
     category: 'Version Control',
   },
-  // Add more certifications with category and role
+  
+  
 ];
 
 
@@ -44,6 +55,8 @@ const Certification = () => {
   const autoScrolling = React.useRef(false);
   // Responsive card count (desktop: 3, mobile: 1)
   const [cardCount, setCardCount] = useState(1);
+  // Track mobile view similar to Projects.jsx
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
   React.useEffect(() => {
     const updateCardCount = () => {
       setCardCount(window.innerWidth >= 1024 ? 3 : 1);
@@ -53,12 +66,25 @@ const Certification = () => {
     return () => window.removeEventListener('resize', updateCardCount);
   }, []);
 
+  // keep in sync with viewport for mobile rendering
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Card width used for scrolling calculations (same approach as Projects.jsx)
+  const cardWidth = window.innerWidth >= 1024 ? 340 : Math.max(280, window.innerWidth - 48);
+
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [activeIndex, setActiveIndex] = useState(0);
   // Filter logic (only by category)
   const filteredCerts = certificationsData.filter(cert =>
     selectedCategory === 'All' || cert.category === selectedCategory
   );
+
+  // Number of dot groups (3 per dot on desktop, 1 on mobile)
+  const dotCount = Math.ceil(filteredCerts.length / cardCount);
 
   // Auto-scroll cards every 8 seconds (responsive)
   React.useEffect(() => {
@@ -70,7 +96,7 @@ const Certification = () => {
         return next >= filteredCerts.length ? 0 : next;
       });
       setTimeout(() => { autoScrolling.current = false; }, 600); // allow scroll to finish
-    }, 8000);
+    }, 15000);
     return () => clearInterval(interval);
   }, [filteredCerts.length, cardCount]);
 
@@ -78,11 +104,11 @@ const Certification = () => {
   React.useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTo({
-        left: activeIndex * 340,
+        left: activeIndex * cardWidth,
         behavior: 'smooth',
       });
     }
-  }, [activeIndex, cardCount]);
+  }, [activeIndex, cardCount, cardWidth]);
 
   const [zoomCert, setZoomCert] = useState(null);
   // Helper: check if certification is new (issued within last 14 days)
@@ -98,16 +124,24 @@ const Certification = () => {
   const scrollRef = React.useRef(null);
   const handleScroll = (e) => {
     if (autoScrolling.current) return; // ignore scroll events during auto-scroll
-    const cardWidth = 340; // px
     const index = Math.round(e.target.scrollLeft / cardWidth);
     setActiveIndex(index);
   };
 
+  // Click a dot to jump to group (desktop) or position (mobile)
+  const scrollToGroup = (idx) => {
+    const firstIndexOfGroup = idx * cardCount;
+    setActiveIndex(firstIndexOfGroup);
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({ left: firstIndexOfGroup * cardWidth, behavior: 'smooth' });
+    }
+  };
+
   return (
-    <section id="certification" className="py-20 px-4 bg-gradient-to-br from-gray-50 via-white to-gray-100 min-h-screen">
+    <section id="certification" className="py-20 px-4 bg-gradient-to-br from-gray-50 via-white to-gray-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-4xl font-extrabold text-center text-gray-800 mb-4 tracking-tight animate-fade-in">Certifications & Badges</h2>
-        <p className="text-center text-gray-500 mb-8 animate-fade-in">My professional achievements, awards, and badges</p>
+        <h2 className="text-4xl font-extrabold text-center text-gray-800 dark:text-white mb-4 tracking-tight animate-fade-in">Certifications & Badges</h2>
+        <p className="text-center text-gray-500 dark:text-gray-400 mb-8 animate-fade-in">My professional achievements, awards, and badges</p>
         {/* Category Filter Only */}
         {/* Category Filter Only - horizontal scroll on mobile */}
         <div className="flex flex-nowrap gap-3 mb-8 overflow-x-auto scrollbar-hide px-1" style={{ WebkitOverflowScrolling: 'touch' }}>
@@ -123,18 +157,53 @@ const Certification = () => {
             >{cat}</button>
           ))}
         </div>
-        {/* Horizontal Scrollable Cards */}
+        {/* Horizontal Scrollable Cards (match Projects behavior) */}
         <div className="relative">
+          {/* Previous Button (desktop only) */}
+          {dotCount > 1 && (
+            <button
+              type="button"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white/80 shadow-lg border border-pink-200 text-pink-500 hover:bg-pink-500 hover:text-white transition duration-200"
+              style={{ display: Math.floor(activeIndex / cardCount) > 0 ? undefined : 'none' }}
+              onClick={() => {
+                const groupIndex = Math.floor(activeIndex / cardCount);
+                const newGroup = Math.max(groupIndex - 1, 0);
+                scrollToGroup(newGroup);
+              }}
+              aria-label="Previous"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" /></svg>
+            </button>
+          )}
+          {/* Next Button (desktop only) */}
+          {dotCount > 1 && (
+            <button
+              type="button"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-10 h-10 rounded-full bg-white/80 shadow-lg border border-pink-200 text-pink-500 hover:bg-pink-500 hover:text-white transition duration-200"
+              style={{ display: Math.floor(activeIndex / cardCount) < (dotCount - 1) ? undefined : 'none' }}
+              onClick={() => {
+                const groupIndex = Math.floor(activeIndex / cardCount);
+                const newGroup = Math.min(groupIndex + 1, dotCount - 1);
+                scrollToGroup(newGroup);
+              }}
+              aria-label="Next"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+            </button>
+          )}
           <div
             ref={scrollRef}
             onScroll={handleScroll}
-            className="flex overflow-x-auto gap-8 pb-6 scroll-smooth"
-            style={{ scrollSnapType: 'x mandatory' }}
+            className="flex overflow-x-auto md:overflow-x-hidden gap-6 pb-4 snap-x snap-mandatory w-full md:w-[1062px]"
+            style={{ scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory', maxWidth: '100%' }}
           >
-            {filteredCerts.map((cert, index) => (
+            {(isMobile
+              ? filteredCerts
+              : filteredCerts.slice(activeIndex, activeIndex + cardCount)
+            ).map((cert, index) => (
               <div
                 key={index}
-                className="min-w-[340px] max-w-[340px] bg-white rounded-2xl shadow-xl border border-gray-200 p-8 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:border-pink-400 relative animate-fade-in cursor-pointer"
+                className={`snap-start min-w-[340px] max-w-[340px] bg-white rounded-2xl shadow-xl border border-gray-200 p-8 flex flex-col items-center transition-transform duration-300 hover:scale-105 hover:shadow-2xl hover:border-pink-400 relative animate-fade-in cursor-pointer`}
                 style={{ scrollSnapAlign: 'center', animationDelay: `${index * 150}ms` }}
                 onClick={() => setZoomCert(cert)}
               >
@@ -181,18 +250,19 @@ const Certification = () => {
               </div>
             ))}
           </div>
-          {/* Dot indicators - show only if more than one card visible */}
-          {Math.ceil(filteredCerts.length / cardCount) > 1 && (
+          {/* Dot indicators - group by 3 on desktop (like Projects) */}
+          {dotCount > 1 && (
             <div className="flex justify-center items-center gap-2 mt-2">
-              {Array.from({ length: Math.ceil(filteredCerts.length / cardCount) }).map((_, idx) => {
-                // Active dot logic: desktop (group), mobile (card)
+              {Array.from({ length: dotCount }).map((_, idx) => {
                 const isActive = Math.floor(activeIndex / cardCount) === idx;
                 return (
-                  <span
+                  <button
                     key={idx}
+                    onClick={() => scrollToGroup(idx)}
                     className={`rounded-full border-2 transition-all duration-500 shadow-md ${isActive
                       ? 'w-6 h-3 bg-gradient-to-r from-pink-300 to-fuchsia-300 border-pink-500 animate-pulse'
-                      : 'w-3 h-3 bg-gray-300 border-gray-300 opacity-60'} `}
+                      : 'w-3 h-3 bg-gray-300 border-gray-300 opacity-60'}`}
+                    aria-label={`Go to certification group ${idx + 1}`}
                     style={{ display: 'inline-block' }}
                   />
                 );

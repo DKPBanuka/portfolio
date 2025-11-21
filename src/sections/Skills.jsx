@@ -52,11 +52,11 @@ const Skills = () => {
   ));
 
   return (
-    <section id="skills" className="py-20 px-4 bg-gray-50 overflow-hidden">
+    <section id="skills" className="py-20 px-4 bg-gray-50 dark:bg-gray-900 overflow-hidden transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         {/* Section Title */}
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-2">Skills & Technologies</h2>
-        <p className="text-center text-gray-500 mb-12">Crafting digital experiences with modern tools</p>
+        <h2 className="text-3xl font-bold text-center text-gray-800 dark:text-white mb-2">Skills & Technologies</h2>
+        <p className="text-center text-gray-500 dark:text-gray-400 mb-12">Crafting digital experiences with modern tools</p>
         
         {/* Container for the TagSphere component */}
         <div className="flex justify-center items-center">

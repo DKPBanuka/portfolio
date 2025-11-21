@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-scroll'; // For smooth scrolling
-import { FaBars, FaTimes } from 'react-icons/fa'; // Hamburger menu icons
+import { FaBars, FaTimes, FaMoon, FaSun } from 'react-icons/fa'; // Hamburger menu icons and theme icons
 import PBLogo from '../assets/profile-image.png';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Navbar = () => {
   // State to manage mobile menu visibility
   const [isOpen, setIsOpen] = useState(false);
+  const { isDark, toggleTheme } = useTheme();
 
   // Function to toggle the menu
   const toggleMenu = () => {
@@ -59,7 +61,7 @@ const Navbar = () => {
         <div className="w-full max-w-6xl ">
           <div
             ref={containerRef}
-            className="relative flex items-center justify-between rounded-3xl bg-white/80 backdrop-blur-2xl shadow-[0_8px_30px_-18px_rgba(0,0,0,.10)] ring-1 ring-pink-50 border border-pink-50/40 px-5 py-2 overflow-hidden"
+            className="relative flex items-center justify-between rounded-3xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-2xl shadow-[0_8px_30px_-18px_rgba(0,0,0,.10)] dark:shadow-[0_8px_30px_-18px_rgba(255,255,255,.10)] ring-1 ring-pink-50 dark:ring-pink-900 border border-pink-50/40 dark:border-pink-900/40 px-5 py-2 overflow-hidden"
             onMouseMove={(e) => {
               const container = containerRef.current;
               const rect = container.getBoundingClientRect();
@@ -80,7 +82,7 @@ const Navbar = () => {
               <div className="h-10 w-10 rounded-full overflow-hidden flex items-center justify-center shadow-lg">
                 <img src={PBLogo} alt="PB logo" className="h-full w-full object-cover rounded-full" />
               </div>
-              <span className="text-base font-bold tracking-tight text-gray-800 hidden sm:inline">Pasindu Banuka</span>
+              <span className="text-base font-bold tracking-tight text-gray-800 dark:text-white hidden sm:inline">Pasindu Banuka</span>
             </div>
           </a>
 
@@ -97,16 +99,36 @@ const Navbar = () => {
                 smooth={true}
                 offset={-80}
                 duration={500}
-                className="nav-link text-sm font-bold tracking-wide uppercase px-4 py-2 rounded-full text-gray-900 transition-all duration-200 font-barlow"
-                activeClass="bg-[#ff0055] text-white"
+                className="nav-link text-sm font-bold tracking-wide uppercase px-4 py-2 rounded-full text-gray-900 dark:text-gray-100 transition-all duration-200 font-barlow"
+                activeClass="bg-[#ff0055] text-white dark:bg-pink-600 dark:text-white"
               >
                 {link.label}
               </Link>
             ))}
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          {/* Theme Toggle Button */}
+          <div className="hidden md:block mr-2">
+            <button
+              aria-label="Toggle theme"
+              onClick={toggleTheme}
+              className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-[#e6004c] to-pink-500 dark:from-pink-600 dark:to-purple-600 text-white shadow-lg transition-transform hover:scale-110"
+            >
+              {isDark ? <FaSun size={20} /> : <FaMoon size={20} />}
+            </button>
+          </div>
+
+          {/* Mobile Menu Button and Theme Toggle */}
+          <div className="md:hidden flex items-center gap-2">
+            {/* Theme Toggle Button for Mobile */}
+            <button
+              aria-label="Toggle theme"
+              onClick={toggleTheme}
+              className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-[#e6004c] to-pink-500 dark:from-pink-600 dark:to-purple-600 text-white shadow-lg transition-transform"
+            >
+              {isDark ? <FaSun size={18} /> : <FaMoon size={18} />}
+            </button>
+            
             <button
               aria-label="Toggle menu"
               className={`grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-[#e6004c] to-pink-500 text-white shadow-lg transition-transform ${isOpen ? 'rotate-90' : ''}`}
@@ -127,15 +149,15 @@ const Navbar = () => {
           />
           {/* Panel */}
           <div
-            className={`absolute left-0 top-0 h-full w-96 bg-white/30 backdrop-blur-xl border-l-4 border-pink-300 shadow-2xl rounded-r-3xl transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
+            className={`absolute left-0 top-0 h-full w-96 bg-white/30 dark:bg-gray-800/30 backdrop-blur-xl border-l-4 border-pink-300 dark:border-pink-600 shadow-2xl rounded-r-3xl transform transition-transform duration-300 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}
           >
             {/* Close button for mobile drawer */}
             <button
               aria-label="Close menu"
-              className="absolute top-4 right-4 z-50 bg-white/80 rounded-full p-2 shadow-lg hover:bg-pink-100 transition"
+              className="absolute top-4 right-4 z-50 bg-white/80 dark:bg-gray-700/80 rounded-full p-2 shadow-lg hover:bg-pink-100 dark:hover:bg-pink-900 transition"
               onClick={toggleMenu}
             >
-              <FaTimes size={24} className="text-pink-500" />
+              <FaTimes size={24} className="text-pink-500 dark:text-pink-400" />
             </button>
             <div className="p-6 flex flex-col gap-6 h-full overflow-y-auto">
               {/* Navigation Sections */}
@@ -172,15 +194,15 @@ const Navbar = () => {
                       key={link.to}
                       href={hash}
                       onClick={handleMobileNavClick}
-                      className={`flex items-center gap-4 px-4 py-3 rounded-2xl shadow-lg backdrop-blur-lg transition-all ${isActive ? 'bg-pink-200/60 scale-105' : 'bg-white/40 hover:bg-pink-100'}`}
+                      className={`flex items-center gap-4 px-4 py-3 rounded-2xl shadow-lg backdrop-blur-lg transition-all ${isActive ? 'bg-pink-200/60 dark:bg-pink-800/60 scale-105' : 'bg-white/40 dark:bg-gray-700/40 hover:bg-pink-100 dark:hover:bg-pink-900'}`}
                       style={{
                         boxShadow: '0 8px 32px 0 rgba(236,72,153,0.10)',
                         borderRadius: '1rem',
                         overflow: 'hidden',
                       }}
                     >
-                      <span className="bg-white/60 rounded-xl p-3 shadow flex items-center justify-center">{icons[link.to]}</span>
-                      <span className={`font-bold text-gray-700 text-lg tracking-wide`}>{link.label}</span>
+                      <span className="bg-white/60 dark:bg-gray-600/60 rounded-xl p-3 shadow flex items-center justify-center">{icons[link.to]}</span>
+                      <span className={`font-bold text-gray-700 dark:text-gray-200 text-lg tracking-wide`}>{link.label}</span>
                     </a>
                   );
                 })}
@@ -189,23 +211,23 @@ const Navbar = () => {
               <div className="flex flex-col items-center gap-2">
                 <div className="flex items-center gap-3 mb-2">
                   {/* Left-side icon */}
-                  <span className="bg-pink-100 rounded-full p-2 shadow">
-                    <svg className="w-7 h-7 text-pink-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" /><path strokeLinecap="round" strokeLinejoin="round" d="M5.5 21a7.5 7.5 0 0113 0" /></svg>
+                  <span className="bg-pink-100 dark:bg-pink-900 rounded-full p-2 shadow">
+                    <svg className="w-7 h-7 text-pink-500 dark:text-pink-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="7" r="4" /><path strokeLinecap="round" strokeLinejoin="round" d="M5.5 21a7.5 7.5 0 0113 0" /></svg>
                   </span>
                   <div className="h-16 w-16 rounded-full overflow-hidden shadow-lg">
-                    <img src={PBLogo} alt="Profile" className="h-full w-full object-cover rounded-full border-4 border-pink-200" />
+                    <img src={PBLogo} alt="Profile" className="h-full w-full object-cover rounded-full border-4 border-pink-200 dark:border-pink-700" />
                   </div>
                 </div>
-                <span className="text-lg font-bold text-gray-900">Pasindu Banuka</span>
-                <span className="text-xs text-gray-500"> DevOps | Full Stack</span>
+                <span className="text-lg font-bold text-gray-900 dark:text-white">Pasindu Banuka</span>
+                <span className="text-xs text-gray-500 dark:text-gray-400"> DevOps | Full Stack</span>
               </div>
               {/* Social Links */}
               <div>
-                <div className="text-xs font-bold text-pink-600 mb-2">FOLLOW ME</div>
+                <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-2">FOLLOW ME</div>
                 <div className="flex gap-3">
-                  <a href="https://github.com/DKPBanuka" target="_blank" rel="noopener" className="bg-white rounded-xl p-3 shadow hover:bg-pink-50 transition"><svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.529 2.341 1.088 2.91.832.091-.646.349-1.088.635-1.34-2.221-.253-4.555-1.112-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.748-1.025 2.748-1.025.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.337 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .267.18.578.688.48A10.013 10.013 0 0022 12c0-5.523-4.477-10-10-10z" /></svg></a>
-                  <a href="https://www.linkedin.com/in/pasindu-banuka-216b7133b" target="_blank" rel="noopener" className="bg-white rounded-xl p-3 shadow hover:bg-pink-50 transition"><svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 8a6 6 0 01-12 0C4 4.686 7.134 2 12 2s8 2.686 8 6a6 6 0 01-4 6z" /></svg></a>
-                  <a href="https://wa.me/94789287469" target="_blank" rel="noopener" className="bg-white rounded-xl p-3 shadow hover:bg-pink-50 transition"><svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.52 3.48A11.94 11.94 0 0012 0C5.37 0 0 5.37 0 12c0 2.12.55 4.13 1.61 5.93L0 24l6.07-1.59A11.94 11.94 0 0012 24c6.63 0 12-5.37 12-12 0-2.12-.55-4.13-1.61-5.93zM12 22c-1.85 0-3.63-.5-5.18-1.44l-.37-.22-3.6.95.96-3.51-.24-.38A9.94 9.94 0 012 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.07-7.75c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.28-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.43-2.25-1.37-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.13-.13.28-.34.42-.51.14-.17.18-.29.28-.48.09-.19.05-.36-.02-.5-.07-.14-.61-1.47-.84-2.01-.22-.54-.45-.47-.61-.48-.16-.01-.35-.01-.54-.01-.19 0-.5.07-.76.34-.26.27-1 1.01-1 2.46s1.03 2.85 1.18 3.05c.15.2 2.03 3.2 5.01 4.36.7.3 1.25.48 1.68.61.43.13.82.12 1.13.07.31-.05.96-.39 1.1-.77.14-.38.14-.71.1-.77-.04-.06-.15-.1-.43-.24z" /></svg></a>
+                  <a href="https://github.com/DKPBanuka" target="_blank" rel="noopener" className="bg-white dark:bg-gray-700 rounded-xl p-3 shadow hover:bg-pink-50 dark:hover:bg-pink-900 transition"><svg className="w-5 h-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.892 1.529 2.341 1.088 2.91.832.091-.646.349-1.088.635-1.34-2.221-.253-4.555-1.112-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.748-1.025 2.748-1.025.546 1.378.202 2.397.1 2.65.64.7 1.028 1.595 1.028 2.688 0 3.847-2.337 4.695-4.566 4.944.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .267.18.578.688.48A10.013 10.013 0 0022 12c0-5.523-4.477-10-10-10z" /></svg></a>
+                  <a href="https://www.linkedin.com/in/pasindu-banuka-216b7133b" target="_blank" rel="noopener" className="bg-white dark:bg-gray-700 rounded-xl p-3 shadow hover:bg-pink-50 dark:hover:bg-pink-900 transition"><svg className="w-5 h-5 text-gray-500 dark:text-gray-300" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 8a6 6 0 01-12 0C4 4.686 7.134 2 12 2s8 2.686 8 6a6 6 0 01-4 6z" /></svg></a>
+                  <a href="https://wa.me/94789287469" target="_blank" rel="noopener" className="bg-white dark:bg-gray-700 rounded-xl p-3 shadow hover:bg-pink-50 dark:hover:bg-pink-900 transition"><svg className="w-5 h-5 text-green-500 dark:text-green-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20.52 3.48A11.94 11.94 0 0012 0C5.37 0 0 5.37 0 12c0 2.12.55 4.13 1.61 5.93L0 24l6.07-1.59A11.94 11.94 0 0012 24c6.63 0 12-5.37 12-12 0-2.12-.55-4.13-1.61-5.93zM12 22c-1.85 0-3.63-.5-5.18-1.44l-.37-.22-3.6.95.96-3.51-.24-.38A9.94 9.94 0 012 12c0-5.52 4.48-10 10-10s10 4.48 10 10-4.48 10-10 10zm5.07-7.75c-.28-.14-1.65-.81-1.9-.9-.25-.09-.43-.14-.61.14-.18.28-.7.9-.86 1.08-.16.18-.32.2-.6.07-.28-.14-1.18-.43-2.25-1.37-.83-.74-1.39-1.65-1.55-1.93-.16-.28-.02-.43.12-.57.13-.13.28-.34.42-.51.14-.17.18-.29.28-.48.09-.19.05-.36-.02-.5-.07-.14-.61-1.47-.84-2.01-.22-.54-.45-.47-.61-.48-.16-.01-.35-.01-.54-.01-.19 0-.5.07-.76.34-.26.27-1 1.01-1 2.46s1.03 2.85 1.18 3.05c.15.2 2.03 3.2 5.01 4.36.7.3 1.25.48 1.68.61.43.13.82.12 1.13.07.31-.05.96-.39 1.1-.77.14-.38.14-.71.1-.77-.04-.06-.15-.1-.43-.24z" /></svg></a>
                 </div>
               </div>
               {/* Quick Actions */}
@@ -237,20 +259,20 @@ const Navbar = () => {
               </div>
               {/* Contact Info */}
               <div>
-                <div className="text-xs font-bold text-pink-600 mb-2 mt-4">CONTACT</div>
+                <div className="text-xs font-bold text-pink-600 dark:text-pink-400 mb-2 mt-4">CONTACT</div>
                 <div className="flex flex-col gap-3">
                   <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" /><path strokeLinecap="round" strokeLinejoin="round" d="M8 11h8M8 15h6" /></svg>
+                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h14a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" /><path strokeLinecap="round" strokeLinejoin="round" d="M8 11h8M8 15h6" /></svg>
                     <div>
-                      <div className="font-bold">Call Now</div>
-                      <div className="text-xs text-gray-500">+94 789287469</div>
+                      <div className="font-bold dark:text-white">Call Now</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">+94 789287469</div>
                     </div>
                   </div>
                   <div className="flex items-center gap-3">
-                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 12v1a4 4 0 01-8 0v-1" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 16v2m0-6V8m0 0a4 4 0 014-4h0a4 4 0 00-4 4z" /></svg>
+                    <svg className="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 12v1a4 4 0 01-8 0v-1" /><path strokeLinecap="round" strokeLinejoin="round" d="M12 16v2m0-6V8m0 0a4 4 0 014-4h0a4 4 0 00-4 4z" /></svg>
                     <div>
-                      <div className="font-bold">Mail Us</div>
-                      <div className="text-xs text-gray-500">pasindubanuka155@gmail.com</div>
+                      <div className="font-bold dark:text-white">Mail Us</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">pasindubanuka155@gmail.com</div>
                     </div>
                   </div>
                 </div>

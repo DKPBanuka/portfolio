@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Footer from './components/Footer';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 // Import all the components and sections
 import Navbar from './components/Navbar';
@@ -14,18 +15,20 @@ import Contact from './sections/Contact';
 
 function App() {
   return (
-    <div>
-      <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Certification />
-        <Skills />
-        <Projects />
-        <Contact />
-      </main>
-      <Footer />
-    </div>
+    <ThemeProvider>
+      <div className="dark:bg-gray-900 transition-colors duration-300">
+        <Navbar />
+        <main>
+          <Hero />
+          <About />
+          <Certification />
+          <Skills />
+          <Projects />
+          <Contact />
+        </main>
+        <Footer />
+      </div>
+    </ThemeProvider>
   );
 }
 
