@@ -8,6 +8,15 @@ import linuxBadgeImg from '../assets/certification/Linux-Level1.png';
 
 const certificationsData = [
   {
+    image: linuxBadgeImg,
+    title: 'Linux Level 1',
+    org: 'KodeKloud',
+    issueDate: '2025-10-16',
+    credential: 'https://engineer.kodekloud.com/certificate-verification/b1d01f1c-7efb-4a33-9968-c00db064c1b8',
+    description: 'Essential knowledge of Linux command line, file system navigation, and basic shell scripting.',
+    category: 'System Administration',
+  },
+  {
     image: awsFoundationImg,
     title: 'AWS Certified Cloud Practitioner',
     org: 'Amazon Web Services',
@@ -34,15 +43,7 @@ const certificationsData = [
     description: 'Essential knowledge of Git repositories, branching, merging, commit history, and remote repository management.',
     category: 'Version Control',
   },
-  {
-    image: linuxBadgeImg,
-    title: 'Linux Level 1',
-    org: 'KodeKloud',
-    issueDate: '2025-10-16',
-    credential: 'https://engineer.kodekloud.com/certificate-verification/b1d01f1c-7efb-4a33-9968-c00db064c1b8',
-    description: 'Essential knowledge of Linux command line, file system navigation, and basic shell scripting.',
-    category: 'System Administration',
-  },
+  
   
 ];
 
@@ -95,7 +96,7 @@ const Certification = () => {
         return next >= filteredCerts.length ? 0 : next;
       });
       setTimeout(() => { autoScrolling.current = false; }, 600); // allow scroll to finish
-    }, 8000);
+    }, 15000);
     return () => clearInterval(interval);
   }, [filteredCerts.length, cardCount]);
 
