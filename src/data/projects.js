@@ -7,7 +7,7 @@ export const projects = [
     description: 'A personal portfolio built with React and Tailwind CSS.',
     liveDemo: 'https://your-portfolio-demo-link.com',
     github: 'https://github.com/yourusername/portfolio',
-    image: 'portfolio.png',
+    image: 'Portfolio.png',
     techStack: [
       { name: 'React', icon: 'react' },
       { name: 'Tailwind CSS', icon: 'tailwind' },

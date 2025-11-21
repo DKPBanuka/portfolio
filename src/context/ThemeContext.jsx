@@ -6,8 +6,18 @@ const ThemeContext = createContext();
 export const ThemeProvider = ({ children }) => {
   // Initialize theme from localStorage or default to 'light'
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem('theme');
-    return savedTheme || 'light';
+    // Check if we're in a browser environment
+    if (typeof window === 'undefined') return 'light';
+    
+    try {
+      const savedTheme = localStorage.getItem('theme');
+      // Validate the saved theme
+      return savedTheme === 'dark' || savedTheme === 'light' ? savedTheme : 'light';
+    } catch (error) {
+      // Handle cases where localStorage is not available
+      console.warn('Failed to access localStorage:', error);
+      return 'light';
+    }
   });
 
   // Update document class and localStorage when theme changes
@@ -18,7 +28,13 @@ export const ThemeProvider = ({ children }) => {
     } else {
       root.classList.remove('dark');
     }
-    localStorage.setItem('theme', theme);
+    
+    // Safely update localStorage
+    try {
+      localStorage.setItem('theme', theme);
+    } catch (error) {
+      console.warn('Failed to save theme to localStorage:', error);
+    }
   }, [theme]);
 
   const toggleTheme = () => {

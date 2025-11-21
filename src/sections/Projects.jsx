@@ -7,7 +7,7 @@ import project2Image from '../assets/projects/Portfolio.png';
 
 const imageMap = {
   'devops.webp': project1Image,
-  'portfolio.png': project2Image,
+  'Portfolio.png': project2Image,
 };
 
 const Projects = () => {
